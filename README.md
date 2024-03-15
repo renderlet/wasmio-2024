@@ -2,6 +2,8 @@
 
 Wasm I/O 2024 presentation material by Sean Isom from renderlet.
 
+![renderlet playground](webapp.gif)
+
 ## wander
 Introducing wander: the cross platform wasm renderer.
 
