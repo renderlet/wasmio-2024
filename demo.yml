@@ -1,0 +1,249 @@
+---
+  grammars: 
+    version: "0.1"
+    grammar: 
+      - 
+        attr: 
+          - 
+            name: "depth"
+            value: "8.0"
+          - 
+            name: "height"
+            value: "28.0"
+          - 
+            name: "width"
+            value: "15.0"
+          - 
+            name: "awning"
+            value: "0.35"
+          - 
+            name: "color"
+            value: "#555555"
+        rule: 
+          - 
+            name: "Start"
+            op:
+              -
+                size: 
+                  centered: "true"
+                  x: 
+                    value: "width"
+                    type: "absolute"
+                  y: 
+                    value: "depth"
+                    type: "absolute"
+                  z: 
+                    value: "0"
+                    type: "absolute"
+              -
+                extrude: 
+                  height: "height"
+              -
+                comp: 
+                  - 
+                    name: "side"
+                    value: "Facade"
+                  - 
+                    name: "top"
+                    value: "Top"
+                  - 
+                    name: "bottom"
+                    value: "Base"
+          - 
+            name: "Top"
+            op:
+              -
+                offset: 
+                  offsetDistance: "awning"
+                  inside: "AwningExtrude"
+          - 
+            name: "AwningExtrude"
+            op:
+              -
+                extrude: 
+                  height: "height * 0.05"
+              -
+                comp: 
+                  - 
+                    name: "bottom"
+                    value: "Wall"
+                  - 
+                    name: "side"
+                    value: "Wall"
+                  - 
+                    name: "top"
+                    value: "AwningTop"
+          - 
+            name: "AwningTop"
+            op:
+              -
+                offset: 
+                  offsetDistance: "-awning"
+                  border: "Wall"
+                  inside: "AwningInside"
+          - 
+            name: "AwningInside"
+            op:
+              -
+                extrude: 
+                  height: "-awning*0.8"
+              -
+                comp: 
+                  - 
+                    name: "side"
+                    value: "Wall"
+                  - 
+                    name: "top"
+                    value: "Roof"
+          - 
+            name: "Roof"
+            op:
+              -
+                setupProjection: 
+                  axes: "scope.xy"
+                  width: 
+                    value: "1"
+                    type: "relative"
+                  height: 
+                    value: "1"
+                    type: "relative"
+              -
+                texture: 
+                  path: "roof2.png"
+          - 
+            name: "Wall"
+            op:
+              -
+                color: 
+                  s: "color"
+      - 
+        attr: 
+          - 
+            name: "FloorHeight"
+            value: "2.1"
+          - 
+            name: "DividerHeight"
+            value: "0.015"
+          - 
+            name: "EdgeWidth"
+            value: "0.4"
+          - 
+            name: "InsideWidth"
+            value: "1.8"
+          - 
+            name: "Window"
+            value: "1.0"
+          - 
+            name: "Sill"
+            value: "0.5"
+        rule: 
+          - 
+            name: "Facade"
+            op:
+              -
+                setupProjection: 
+                  axes: "scope.xy"
+                  width:
+                    value: "5"
+                    type: "absolute"
+                  height: 
+                    value: "5"
+                    type: "absolute"
+              -
+                split: 
+                  axis: "y"
+                  sizes: 
+                    - 
+                      value: "FloorHeight"
+                      name: "Floor"
+                      repeat: "true"
+                      type: "floating"
+                    - 
+                      value: "DividerHeight"
+                      name: "Wall"
+                      type: "floating"
+          - 
+            name: "Floor"
+            op:
+              -
+                split: 
+                  axis: "x"
+                  sizes: 
+                    - 
+                      value: "EdgeWidth"
+                      name: "Edge"
+                      type: "floating"
+                    - 
+                      value: "InsideWidth"
+                      name: "VerticalFrame"
+                      repeat: "true"
+                      type: "floating"
+                    - 
+                      value: "EdgeWidth"
+                      name: "Edge"
+                      type: "floating"
+          -
+            name: "Edge"
+            op: 
+              -
+                color:
+                  s: "#222222"       
+          - 
+            name: "VerticalFrame"
+            op:
+              -
+                split: 
+                  axis: "y"
+                  sizes: 
+                    - 
+                      value: "Sill"
+                      name: "Wall"
+                      type: "floating"
+                    - 
+                      value: "Window"
+                      name: "HorizontalFrame"
+                      type: "floating"
+                    - 
+                      value: "Sill"
+                      name: "Wall"
+                      type: "floating"
+          - 
+            name: "HorizontalFrame"
+            op:
+              -
+                split: 
+                  axis: "x"
+                  sizes: 
+                    - 
+                      value: "Sill"
+                      name: "WinFrame"
+                      type: "floating"
+                    - 
+                      value: "Window"
+                      name: "WinTexture"
+                      type: "floating"
+                    - 
+                      value: "Sill"
+                      name: "WinFrame"
+                      type: "floating"
+          -
+            name: "WinFrame"
+            op:
+              -
+                color:
+                  s: "#aaaaaa" 
+          - 
+            name: "WinTexture"
+            op:
+              -
+                setupProjection: 
+                  axes: "scope.xy"
+                  width: 
+                    value: "1"
+                    type: "relative"
+                  height: 
+                    value: "1"
+                    type: "relative"
+              -
+                texture: 
+                  path: "window_glass.png"
